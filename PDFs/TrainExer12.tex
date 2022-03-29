@@ -1,0 +1,81 @@
+% !TEX program = latex
+
+\documentclass[12pt]{article}
+
+\usepackage[right=1in]{geometry}
+
+\usepackage{mathtools}
+\usepackage{cancel}
+\usepackage{xfrac}
+
+\usepackage{fancyhdr}
+
+\pagestyle{fancy}
+\fancyhead[L]{Training Exercise 1.2}
+\fancyhead[R]{MOOC Econometrics}
+
+\begin{document}
+
+\section*{Question 1}
+Show that in the regression model $log(y_i) = \alpha + \beta\ log(x_i) + \epsilon_i$ , the elasticity of $y$ with respect to $x$ is equal to $\beta$ (that is, does not depend on the values of $x_i$ and $y_i$).
+
+\subsection*{Answer}
+
+According to the definition of the elasticity, (noted in lecture slides)
+\[
+    \text{Elasticity} = \frac{\sfrac{dy}{y}}{\sfrac{dx}{x}} = \frac{dy}{dx} \times \frac{x}{y}
+\]
+
+By exponentiating both sides of the model
+\begin{align*}
+    y_i &= e^{(\alpha + \epsilon_i)} \times e^{(\beta \times log(x_i))}\\
+        &= e^{(\alpha + \epsilon_i)} \times x_i^\beta\\
+\end{align*}
+
+Now we can calculate the derivative of $y$ with respect to $x$
+\[
+    \frac{d y_i}{d x_i} = e^{\alpha + \epsilon_i} \times \beta \times x_i^{\beta - 1} = \beta \times \frac{y_i}{x_i}
+\]
+
+By substituting the derivative of $y$ with respect to $x$ into the elasticity equation
+\[
+    \text{Elasticity} = \frac{dy}{dx} \times \frac{x}{y} = \beta\ \frac{\cancel{y}}{\cancel{x}} \times \frac{\cancel{x}}{\cancel{y}} = \beta
+\]
+
+\newpage
+\section*{Question 2}
+Determine the elasticity of $y$ with respect to $x$ in the model $y_i = \alpha + \beta\ log(x_i) + \epsilon_i$.
+
+\subsection*{Answer}
+The process is the same as in the previous question.
+
+First we calculate the derivative of $y$ with respect to $x$
+\[
+    \frac{d y_i}{d x_i} = \beta \times \frac{1}{x_i}
+\]
+
+Now the elasticity is
+\[
+    \text{Elasticity} = \frac{dy}{dx} \times \frac{x}{y} = \beta \times \frac{\cancel{x}}{y} \times \frac{1}{\cancel{x}} = \beta \times \frac{1}{y}
+\]
+
+\section*{Question 3}
+Determine the elasticity of $y$ with respect to $x$ in the model $log(y_i) = \alpha + \beta\ x_i + \epsilon_i$.
+
+\subsection*{Answer}
+Exponentiate the model
+\[
+    y_i = e^{(\alpha + \epsilon_i)} \times e^{(\beta x_i)}\\
+\]
+
+By taking the derivative of $y$ with respect to $x$
+\[
+    \frac{d y_i}{d x_i} = e^{\alpha + \epsilon_i} \times \beta \times e^{(\beta x_i)} = \beta \times y_i
+\]
+
+Elasticity would be
+\[
+    \text{Elasticity} = \frac{dy}{dx} \times \frac{x}{y} = \beta \times y \times \frac{x}{y} = \beta \times x_i
+\]
+
+\end{document}

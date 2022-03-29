@@ -1,4 +1,4 @@
-df <- read.delim("Datasets/TrainExer11.txt", header = T, sep = "\t")
+df <- read.delim("Datasets/TrainExer11.txt", header = T, sep = "\t", row.names = 1)
 
 hist(df$Age, xlab = "Age",
   main = "Histogram for Ages"
@@ -40,4 +40,3 @@ omodel <- lm(Expenditures ~ Age, data = olders)
 o50exp <- predict(ymodel, data.frame(Age = c(50)))
 
 print(sprintf("We expect a 50 years old expenditures to be about %f", o50exp))
-
