@@ -1,0 +1,138 @@
+---
+title: "Test Exercise 1"
+author: "Abolfazl Babanazari"
+date: "4/2/2022"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(ggplot2)
+library(glue)
+
+df <- read.delim(
+  "../Datasets/TestExer1-sales.txt",
+  header = T, 
+  sep = "\t", 
+  row.names = 1
+)
+```
+
+## Question 1
+Make the scatter diagram with sales on the vertical axis and advertising on the horizontal axis. What do you
+expect to find if you would fit a regression line to these data?
+
+### Answer
+There is an anomaly in the data ((6, 50)) which seems to effect the linear relation between other points. In the below plot, blue line shows fitted regression line which is quite strange.
+
+I think we should eliminate that point from the dataset, and then regression model demonstrates a meaningful progressive correlation between advertising and sales amount.
+
+```{r model-a, include = FALSE}
+model <- lm(Sales ~ Advert., data = df)
+c <- coef(model)
+```
+
+```{r plot-a, echo=FALSE}
+ggplot(data = df, mapping = aes(x = Advert., y = Sales)) +
+  geom_point() + 
+  geom_abline(slope = c[2], intercept = c[1], color = "blue") +
+  xlim(6, 16) + ylim(20, 50)
+```
+
+## Question 2
+Estimate the coefficients a and b in the simple regression model with sales as dependent variable and advertising
+as explanatory factor. Also compute the standard error and t-value of b. Is b significantly different from 0?
+
+## Answer
+I have used R-functions to calculate the parameters.
+```{r param-b}
+model <- lm(Sales ~ Advert., data = df)
+```
+```{r paramp-b, include = FALSE}
+c <- coef(model)
+
+smry <- summary(model)
+
+std <- smry$coefficients[2, 2]
+t_value <- smry$coefficients[2, 3]
+r_squared <- smry$r.squared
+```
+
+The results are as follows
+
++ The intercept of regression ($\alpha$) is equal to `r round(c[1], 2)` and the slope ($\beta$) is equal to `r round(c[2], 2)`
++ The t-value and standard error of $\beta$ are respectively `r round(t_value, 2)` and `r round(std, 2)`.
+
+By knowing above results, we can calculate 95% confident interval, which is (`r round(c[2] - 2*std, 2)`, `r round(c[2] + 2*std, 2)`). The interval contains zero, therefore `Advertise.` is not significant than zero.
+
+
+## Question 3
+Compute the residuals and draw a histogram of these residuals. What conclusion do you draw from this
+histogram?
+
+### Answer
+In the first glimpse the plot doesn't look like if it's normal distributed, However without considering that one out bar, the overall plot is roughtly bell shaped.
+
+```{r plot-c, echo = FALSE}
+ggplot() + 
+  aes(smry$residuals) + 
+  geom_histogram(binwidth=1, colour="black") +
+  xlab("residuals")
+```
+
+## Question 4
+Apparently, the regression result of part (b) is not satisfactory. Once you realize that the large residual
+corresponds to the week with opening hours during the evening, how would you proceed to get a more
+satisfactory regression model?
+
+### Answer
+By removing this point and applying another linear regression to the data, hopefully results would be more explanatory.
+
+## Question 5
+Apparently, the regression result of part (b) is not satisfactory. Once you realize that the large residual
+corresponds to the week with opening hours during the evening, how would you proceed to get a more
+satisfactory regression model?
+
+### Answer
+To do so I have used following commands (note that 12th observation is anomaly)
+
+``` {r model-e}
+newdf <- df[-c(12), ]
+
+model <- lm(Sales ~ Advert., data = newdf)
+```
+
+```{r plot-e, echo=FALSE}
+c <- coef(model)
+
+ggplot(data = newdf, mapping = aes(x = Advert., y = Sales)) +
+  geom_point() + 
+  geom_abline(slope = c[2], intercept = c[1], color = "blue") +
+  xlim(6, 16) + ylim(20, 50)
+```
+```{r paramp-e, include = FALSE}
+c <- coef(model)
+
+smry <- summary(model)
+
+std <- smry$coefficients[2, 2]
+t_value <- smry$coefficients[2, 3]
+r_squared <- smry$r.squared
+```
+The results are as follows
+
++ The intercept of regression ($\alpha$) is equal to `r round(c[1], 2)` and the slope ($\beta$) is equal to `r round(c[2], 2)`
++ The t-value and standard error of $\beta$ are respectively `r round(t_value, 2)` and `r round(std, 2)`.
++ Also R-squared in this cause is `r round(r_squared, 2)` which is enough to say that `Advertise.` is significant.
+
+By knowing above results, we can calculate 95% confident interval, which is (`r round(c[2] - 2*std, 2)`, `r round(c[2] + 2*std, 2)`). The interval doesn't contain zero, therefore `Advertise.` is now significant than zero.
+
+## Question 6
+Discuss the differences between your findings in parts (b) and (e). Describe in words what you have learned
+from these results.
+
+### Answer
+In section (b), when regression were trying to fit the points, that anomaly points posed a large residual which disrupted the fitted line. In other words, there were a unseen variable which had a relation with both $x$ and $y$ (violation to A3 and A4).
+
+By removing that point from dataset in section (e), the actual relation between variables reveals.
+
